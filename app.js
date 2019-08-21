@@ -1,88 +1,120 @@
-function add(num1, num2) {
-  return num1 + num2;
+(function(root) {
+  let calculatorVariables = {
+    operator: null,
+    firstOperand: null,
+    waitingForSecondOperand: false,
+    displayValue: '0'
+  }
+
+  root.calc = calculatorVariables;
+})(this);
+
+function initializeApp() {
+  const { target } = event;
+
+  if (target.className === 'btn operator') {
+    handleOperator(target.dataset.value);
+    displayScreen();
+    return;
+  }
+  
+  if(target.className === 'btn clear') {
+    clearCalc();
+    displayScreen();
+    return;
+  }
+  if (target.className === 'btn dot') {
+    addDecimal(event);
+    displayScreen();
+    return;
+  }
+  inputNum(target.textContent);
+  displayScreen();
 }
 
-function subtract(num1, num2) {
-  return num1 - num2;
+function handleOperator(nextOperator) {
+  let currentValue = parseInt((calc.displayValue * 1000), 10) / 1000;
+
+  if (calc.operator && calc.waitingForSecondOperand) {
+    calc.operator = nextOperator;
+    return;
+  }
+  if (calc.firstOperand === null) {
+    calc.firstOperand = currentValue;
+  } else if (calc.operator) {
+
+    if (calc.operator === '=') {
+      calc.operator = null;
+      calc.firstOperand = currentValue;
+      displayScreen();
+      return;
+    }
+
+    let previousValue = parseInt((calc.firstOperand * 1000), 10) / 1000;
+    const result = operations[calc.operator](previousValue, currentValue);
+    if (result % 1 !== 0) {
+      calc.displayValue = result.toFixed(2);
+      calc.firstOperand = result.toFixed(2);
+    } else {
+      calc.displayValue = result;
+      calc.firstOperand = result;
+    }
+  }
+
+  calc.waitingForSecondOperand = true;
+  calc.operator = nextOperator;
 }
 
-function multiply(num1, num2) {
-  return num1 * num2;
-}
-
-function divide(num1, num2) {
-  return num1 / num2;
-}
-
-function operate(operator, num1, num2) {
-  if (operator === 'add') {
-    return add(num1, num2);
-  } if (operator === 'subtract') {
-    return subtract(num1, num2);
+function inputNum(num) {
+  let { displayValue } = calc;
+  if (calc.waitingForSecondOperand === true) {
+    calc.displayValue = num;
+    calc.waitingForSecondOperand = false;
+  } else {
+    calc.displayValue = displayValue === '0' ? num : displayValue + num;
   }
 }
 
-function selectElements() {
-  const display = document.getElementById('display');
-  const buttons = Array.from(document.querySelectorAll('.button'));
-  let saveInputOne = 2;
-  let saveInputTwo = 2;
-  let operator = 'add';
-
-  document.addEventListener('click', (event) => {
-    buttons.map((button) => {
-      // console.log(operator);
-      if (event.target !== button) {
-        console.log('Nothing');
-      } else {
-        // take the textContent of event.target and put it in the display area
-        // display.textContent = button.textContent;
-
-        // it should be able to display more numbers than one
-        display.textContent += button.textContent;
-        // console.log(button.textContent);
-        // console.log(typeof display.textContent);
-
-        // if one of operator buttons were pressed, it should clear the area and save the inputted numbers
-        if (event.target.getAttribute('data-special')) {
-          // when operator is pressed, save it in a variable
-          operator += event.target.getAttribute('data-special');
-          if (saveInputOne === 0) {
-            saveInputOne += parseInt(display.textContent, 10);
-            display.textContent = '';
-          } else {
-            saveInputTwo += parseInt(display.textContent, 10);
-            display.textContent = '';
-          }
-        }
-      }
-    });
-    // console.log('saveInputOne:', saveInputOne, 'saveInputTwo:', saveInputTwo);
-  });
-  return {
-    inputOne: saveInputOne,
-    inputTwo: saveInputTwo,
-    op: operator,
-  };
-}
-
-function selectButtons() {
-  const buttons = Array.from(document.querySelectorAll('.button'));
-  const specialButtonArray = [];
-  const numButtonArray = [];
-  buttons.map((button) => {
-    const dataNumbers = button.hasAttribute('data-number');
-
-    if (dataNumbers === true) {
-      numButtonArray.push(button.getAttribute('data-number'));
-    } else if (dataNumbers === false) {
-      specialButtonArray.push(button.getAttribute('data-special'));
+function addDecimal(dot) {
+  console.log(dot);
+  let displayValue = calc.displayValue;
+  if (calc.waitingForSecondOperand === true) {
+    if (calc.firstOperand && calc.operator) {
+      // calc.displayValue = '0.'
+      document.getElementById('display').textContent = '0.';
+      inputNum('0' + dot.target.textContent);
     }
-  });
+    return;
+  } else if (!displayValue.includes('.')) {
+    calc.displayValue += ".";
+  }
 }
 
-selectElements();
+function clearCalc() {
+  calc.operator = null;
+  calc.firstOperand = null;
+  calc.waitingForSecondOperand = false;
+  calc.displayValue = '0';
+}
 
-const calculate = selectElements();
+function displayScreen() {
+  let display = document.getElementById('display');
+  if (calc.displayValue === 'Infinity') {
+    display.textContent = `You can't divide with zero`;
+  } else {
+    display.textContent = calc.displayValue;
+  }
+}
 
-calculate(calculate.op, calculate.inputOne, calculate.inputTwo);
+const operations = {
+  '+': (value1, value2) => value1 + value2,
+  '-': (value1, value2) => value1 - value2,
+  '*': (value1, value2) => value1 * value2,
+  '/': (value1, value2) => value1 / value2,
+}
+
+// const display = document.getElementById('display');
+const keys2 = document.querySelector('.buttons-left');
+const keys1 = document.querySelector('.buttons-right');
+keys1.addEventListener('click', initializeApp);
+keys2.addEventListener('click', initializeApp);

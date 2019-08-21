@@ -4,27 +4,35 @@
     <title>Calculator</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="normalize.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
   </head>
   <body>
     <main id="calculator">
-      <div id="display"></div>
-      <div data-number="9" class="button">9</div>
-      <div data-number="8" class="button">8</div>
-      <div data-number="7" class="button">7</div>
-      <div data-number="6" class="button">6</div>
-      <div data-number="5" class="button">5</div>
-      <div data-number="4" class="button">4</div>
-      <div data-number="3" class="button">3</div>
-      <div data-number="2" class="button">2</div>
-      <div data-number="1" class="button">1</div>
-      <div data-number="0" class="button">0</div>
-      <div data-special="add" class="button">+</div>
-      <div data-special="subtract" class="button">-</div>
-      <div data-special="multiply" class="button">*</div>
-      <div data-special="divide" class="button">/</div>
-      <div data-special="dot" class="button">.</div>
-      <div data-special="equals" class="button">=</div>
+      <div id="display">
+        0
+      </div>
+      <div class="buttons-left">
+          <div data-value="9" class="btn num">9</div>
+          <div data-value="8" class="btn num">8</div>
+          <div data-value="7" class="btn num">7</div>
+          <div data-value="6" class="btn num">6</div>
+          <div data-value="5" class="btn num">5</div>
+          <div data-value="4" class="btn num">4</div>
+          <div data-value="3" class="btn num">3</div>
+          <div data-value="2" class="btn num">2</div>
+          <div data-value="1" class="btn num">1</div>
+          <div data-value="0" class="btn num">0</div>
+          <div data-value="." class="btn dot">.</div>
+          <div data-value="=" class="btn operator">=</div>
+        </div>
+        <div class="buttons-right">
+          <div data-value="+" class="btn operator">+</div>
+          <div data-value="-" class="btn operator">-</div>
+          <div data-value="*" class="btn operator">x</div>
+          <div data-value="/" class="btn operator">/</div>
+          <div data-value="clear" class="btn clear">DEL</div>
+        </div>
     </main>
-    <script src="app.js" ></script>
+    <script src="app.js"></script>
   </body>
 </html>

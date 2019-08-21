@@ -1,24 +1,135 @@
-body {
-  height: 100vh;
-  max-width: 100vw;
-}
-#calculator {
-    display: grid;
-    grid-template-rows: repeat(5, 1fr);
-    grid-template-columns: repeat(4, 1fr);
-    /* grid-column-gap: 5px;
-    grid-row-gap: 5px; */
-    margin: 100px auto;
-    height: 500px;
-    width: 300px;
-    /* border: 1px solid salmon; */
-    background-color: bisque;
-    outline: 5px solid skyblue;
-}
-#display {
-  grid-area: 1 / 1 / 1 / 5;
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
-.button {
-  outline: 1px solid black;
+#calculator {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  margin: 100px auto;
+  height: 500px;
+  width: 300px;
+  background-color: white;
+  color: black;
+  outline: 3px solid black;
+}
+#display {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 20px;
+  grid-area: 1 / 1 / 1 / 5;
+  background-color: white;
+  font-size: 1em;
+}
+
+.buttons-left {
+  font-size: 1em;
+  display: grid;
+  height: 350px;
+  grid-area: 2 / 1 / 2 / 4;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  /* outline: 1px solid black; */
+  background-color: #4C4C4C;
+}
+
+.buttons-right {
+  display: grid;
+  grid-area: 2 / 4 / 2 / 5;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(4, auto);
+  background-color: #5F6267;
+}
+
+.buttons-left .btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.buttons-right .btn {
+  display: flex;
+  justify-content: center;
+  padding-top: 33px;
+  color: white;
+}
+
+.buttons-left .btn:hover {
+  background-color: rgba(95, 98, 103, 0.5)
+}
+
+.buttons-right .btn:hover {
+  background-color: rgba(76, 76, 76, 0.5)
+}
+
+[data-value="9"] {
+  grid-area: 1 / 3 / 1 / 4;
+}
+
+[data-value="8"] {
+  grid-area: 1 / 2 / 1 / 3;
+}
+
+[data-value="7"] {
+  grid-area: 1 / 1 / 1 / 2;
+}
+
+[data-value="6"] {
+  grid-area: 2 / 3 / 2 / 4;
+}
+
+[data-value="5"] {
+  grid-area: 2 / 2 / 2 / 3;
+}
+
+[data-value="4"] {
+  grid-area: 2 / 1 / 2 / 2;
+}
+
+[data-value="3"] {
+  grid-area: 3 / 3 / 3 / 4;
+}
+
+[data-value="2"] {
+  grid-area: 3 / 2 / 3 / 3;
+}
+
+[data-value="1"] {
+  grid-area: 3 / 1 / 3 / 2;
+}
+
+[data-value="."] {
+  grid-area: 4 / 1 / 4 / 2;
+}
+
+[data-value="0"] {
+  grid-area: 4 / 2 / 4 / 3;
+}
+
+[data-value="="] {
+  grid-area: 4 / 3 / 4 / 4;
+}
+
+[data-value="clear"] {
+  grid-area: 1 / 1 / 1 / 1;
+}
+
+[data-value="/"] {
+  grid-area: 2 / 1 / 2 / 1;
+}
+
+[data-value="*"] {
+  grid-area: 3 / 1 / 3 / 1;
+}
+
+[data-value="-"] {
+  grid-area: 4 / 1 / 4 / 1;
+}
+
+[data-value="+"] {
+  grid-area: 5 / 1 / 5 / 1;
 }
