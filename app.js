@@ -3,16 +3,24 @@
     operator: null,
     firstOperand: null,
     waitingForSecondOperand: false,
-    displayValue: '0'
+    displayValue: '0',
+    addMinus: false
   }
 
   root.calc = calculatorVariables;
 })(this);
 
 function initializeApp() {
+  console.log(event.target.dataset.value);
+  let displayContent = document.getElementById('display').textContent.trim();
   const { target } = event;
 
   if (target.className === 'btn operator') {
+    if (target.dataset.value === '-' && displayContent === '0') {
+      addMinus();
+      displayScreen();
+      return;
+    }
     handleOperator(target.dataset.value);
     displayScreen();
     return;
@@ -34,14 +42,15 @@ function initializeApp() {
 
 function handleOperator(nextOperator) {
   let currentValue = parseInt((calc.displayValue * 1000), 10) / 1000;
-
-  if (calc.operator && calc.waitingForSecondOperand) {
+  nextOperator = addMinus(nextOperator); // checking if adding a minus to calculation is neccessary
+  
+  if (calc.operator && calc.waitingForSecondOperand && !calc.addMinus) {
     calc.operator = nextOperator;
     return;
   }
   if (calc.firstOperand === null) {
     calc.firstOperand = currentValue;
-  } else if (calc.operator) {
+  } else if (calc.operator && !calc.addMinus) {
 
     if (calc.operator === '=') {
       calc.operator = null;
@@ -60,27 +69,53 @@ function handleOperator(nextOperator) {
       calc.firstOperand = result;
     }
   }
-
-  calc.waitingForSecondOperand = true;
+  if (!calc.addMinus) {
+    calc.waitingForSecondOperand = true;
+  }
   calc.operator = nextOperator;
 }
 
 function inputNum(num) {
   let { displayValue } = calc;
-  if (calc.waitingForSecondOperand === true) {
+  if (num % num !== 0) {
+    calc.displayValue = num 
+  }
+
+  if (calc.waitingForSecondOperand === true && !calc.addMinus) {
     calc.displayValue = num;
     calc.waitingForSecondOperand = false;
+  } else if (displayValue === '-0' && num % num == 0) {
+    calc.displayValue = '-' + num;
   } else {
+    calc.addMinus = false;
     calc.displayValue = displayValue === '0' ? num : displayValue + num;
   }
 }
 
+function addMinus(nextOperator) {
+  let minusTarget = event.target.dataset.value === '-';
+  let displayContent = document.getElementById('display').textContent.trim();
+  let { operator, displayValue, firstOperand, addMinus } = calc;
+  
+  if (operator && nextOperator === '-' || operator === null && minusTarget) {
+    calc.displayValue = '-';
+    calc.addMinus = true;
+    calc.waitingForSecondOperand = false;
+    nextOperator = operator;
+  } else if (0) {
+    displayContent = '-' + displayContent;
+    calc.displayValue = displayContent;
+  }
+  return nextOperator;
+}
+
 function addDecimal(dot) {
-  console.log(dot);
   let displayValue = calc.displayValue;
-  if (calc.waitingForSecondOperand === true) {
+  if (calc.addMinus || calc.waitingForSecondOperand) { // Muutsin proovimiseks falseiks @ 17:17 22.08 //////calc.waitingForSecondOperand === true/////
     if (calc.firstOperand && calc.operator) {
-      // calc.displayValue = '0.'
+      // if (displayValue.includes('0.')) {
+      //   calc.displayValue = ????;
+      // }
       document.getElementById('display').textContent = '0.';
       inputNum('0' + dot.target.textContent);
     }
@@ -102,6 +137,10 @@ function displayScreen() {
   if (calc.displayValue === 'Infinity') {
     display.textContent = `You can't divide with zero`;
   } else {
+    display.textContent = calc.displayValue;
+  }
+  if (display.textContent.trim().length > 5) {
+    calc.displayValue = display.textContent.substring(0, display.textContent.length - 1); // An answer needs more than 5 spaces!
     display.textContent = calc.displayValue;
   }
 }
