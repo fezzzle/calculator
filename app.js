@@ -42,7 +42,7 @@ function initializeApp() {
 
 function handleOperator(nextOperator) {
   let currentValue = parseInt((calc.displayValue * 1000), 10) / 1000;
-  nextOperator = addMinus(nextOperator); // checking if adding a minus to calculation is neccessary
+  nextOperator = addMinus(nextOperator);
   
   if (calc.operator && calc.waitingForSecondOperand && !calc.addMinus) {
     calc.operator = nextOperator;
@@ -111,11 +111,8 @@ function addMinus(nextOperator) {
 
 function addDecimal(dot) {
   let displayValue = calc.displayValue;
-  if (calc.addMinus || calc.waitingForSecondOperand) { // Muutsin proovimiseks falseiks @ 17:17 22.08 //////calc.waitingForSecondOperand === true/////
+  if (calc.addMinus || calc.waitingForSecondOperand) {
     if (calc.firstOperand && calc.operator) {
-      // if (displayValue.includes('0.')) {
-      //   calc.displayValue = ????;
-      // }
       document.getElementById('display').textContent = '0.';
       inputNum('0' + dot.target.textContent);
     }
@@ -152,7 +149,6 @@ const operations = {
   '/': (value1, value2) => value1 / value2,
 }
 
-// const display = document.getElementById('display');
 const keys2 = document.querySelector('.buttons-left');
 const keys1 = document.querySelector('.buttons-right');
 keys1.addEventListener('click', initializeApp);
